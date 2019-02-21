@@ -1,4 +1,4 @@
-import MessageBoardAPI, { commentData } from "../MessageBoardAPI.js";
+import MessageBoardAPI, { commentData } from '../MessageBoardAPI.js';
 
 class MessageBoardApp extends HTMLElement {
   constructor() {
@@ -7,12 +7,18 @@ class MessageBoardApp extends HTMLElement {
     this.state = {
       comments: this.api.getCommentsSortedByTime()
     };
+    this.addEventListener('removeComment', this.handleRemoveComment);
   }
 
+  // takes in new piece of state
   setState(newState) {
+    // for each piece of state
     Object.keys(newState).forEach(key => {
+      // update correct key
       this.state[key] = newState[key];
+      // select all child elements tracking piece of state w/ attributes
       this.querySelectorAll(`[${key}]`).forEach(element => {
+        // sets the attribute
         element[key] = newState[key];
       });
     });
@@ -34,7 +40,7 @@ class MessageBoardApp extends HTMLElement {
           <button type="submit">Search</button>
         </form>
       </nav>
-      <message-board-comments></message-board-comments>
+      <message-board-comment-list></message-board-comment-list>
         <div class="add-comment">
           <form>
             <input
@@ -50,14 +56,13 @@ class MessageBoardApp extends HTMLElement {
     // add event listeners
     this.querySelector('nav form').addEventListener('submit', this.handleSearchSubmit);
     this.querySelector('.add-comment form').addEventListener('submit', this.handleAddComment);
-    this.querySelector('message-board-comments').setAttribute('comments', JSON.stringify(this.state.comments));
-    this.querySelector('message-board-comments').addEventListener('removeComment', this.handleRemoveComment);
+    this.querySelector('message-board-comment-list').setAttribute('comments', JSON.stringify(this.state.comments));
   }
 
   handleSearchSubmit = event => {
     event.preventDefault();
     const searchText = new FormData(event.target).get('search');
-    const comments = this.state.comments = this.api.filterCommentsByText(searchText);
+    const comments = this.api.filterCommentsByText(searchText);
     this.setState({ comments });
   };
 
@@ -70,7 +75,11 @@ class MessageBoardApp extends HTMLElement {
   };
 
   handleRemoveComment = event => {
-
+    const confirmed = window.confirm(`Really delete ${event.detail}?`);
+    if (confirmed) {
+      const updatedComments = this.api.removeComment(event.target.comment.id);
+      this.setState({ comments: updatedComments });
+    }
   };
 }
 
