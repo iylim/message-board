@@ -61,7 +61,7 @@ class MessageBoardAPI {
    * @param {string} substring Substring to be filtered
    * @returns {array} Filtered array of comment objects
    */
-  filterCommentsByText(substring) {
+  filterCommentsByText(substring = '') {
     return this.comments.filter(comment => comment.text.toLowerCase().includes(substring.toLowerCase()));
   }
 }
