@@ -8,6 +8,7 @@ class MessageBoardApp extends HTMLElement {
       comments: this.api.getCommentsSortedByTime()
     };
     this.addEventListener('removeComment', this.handleRemoveComment);
+    this.addEventListener('editComment', this.handleEditComment);
   }
 
   // takes in new piece of state
@@ -23,7 +24,17 @@ class MessageBoardApp extends HTMLElement {
       });
     });
   }
+  get active() {
+    return this.hasAttribute('active');
+  }
 
+  set active(isActive) {
+    if (isActive) {
+      this.setAttribute('active', '');
+    } 
+    this.removeAttribute('active');
+  }
+  
   connectedCallback() {
     this.render();
   }
@@ -78,6 +89,14 @@ class MessageBoardApp extends HTMLElement {
     const confirmed = window.confirm(`Really delete ${event.detail}?`);
     if (confirmed) {
       const updatedComments = this.api.removeComment(event.target.comment.id);
+      this.setState({ comments: updatedComments });
+    }
+  };
+
+  handleEditComment = event => {
+    const input = window.prompt(`Edit changes below`, `${event.detail}`);
+    if (input) {
+      const updatedComments = this.api.updateComment(event.target.comment.id);
       this.setState({ comments: updatedComments });
     }
   };

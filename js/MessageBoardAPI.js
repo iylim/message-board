@@ -73,26 +73,26 @@ export const commentData = [
   {
     text: 'Love this!',
     id: 1,
-    timestamp: 1549581565,
+    timestamp: 1549581565000,
   },
   {
     text: 'Super good',
     id: 2,
-    timestamp: 1549577965,
+    timestamp: 1549577965000,
   },
   {
     text: 'You are the best',
     id: 3,
-    timestamp: 1549495165,
+    timestamp: 1549495165000,
   },
   {
     text: 'Ramen is my fav food ever',
     id: 4,
-    timestamp: 1548976765,
+    timestamp: 1548976765000,
   },
   {
     text: 'Nice Nice Nice!',
     id: 5,
-    timestamp: 1546903165,
+    timestamp: 1546903165000,
   },
 ];

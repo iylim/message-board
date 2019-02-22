@@ -11,10 +11,11 @@ message-board-comment-item:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-message-board-comment-item .delete-button {
+message-board-comment-item .container {
+  display: flex;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: -2rem;
+  top: -0.3rem;
   transform: translate(-50%, 50%);
   font-size: 0.75rem;
   cursor: pointer;
@@ -22,6 +23,21 @@ message-board-comment-item .delete-button {
   transition: opacity 350ms;
 }
 
-message-board-comment-item:hover .delete-button {
+message-board-comment-item:hover .container {
   opacity: 1;
+}
+
+.edit-button {
+  margin-right: 0.5rem;
+}
+
+
+.timestamp {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.5);
+  padding-top: 5px;
+}
+
+input.comment {
+  display: none;
 }
