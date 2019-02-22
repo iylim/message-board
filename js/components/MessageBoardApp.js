@@ -96,7 +96,7 @@ class MessageBoardApp extends HTMLElement {
   handleEditComment = event => {
     const input = window.prompt(`Edit changes below`, `${event.detail}`);
     if (input) {
-      const updatedComments = this.api.updateComment(event.target.comment.id);
+      const updatedComments = this.api.updateComment(event.target.comment.id, input);
       this.setState({ comments: updatedComments });
     }
   };
