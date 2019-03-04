@@ -4,8 +4,9 @@ class MessageBoardApp extends HTMLElement {
   constructor() {
     super();
     this.api = new MessageBoardAPI(commentData);
-    this.state = {
-      comments: this.api.getCommentsSortedByTime()
+    this.state = { 
+      comments: [],
+      loading: true 
     };
     this.addEventListener('removeComment', this.handleRemoveComment);
     this.addEventListener('editComment', this.handleEditComment);
@@ -36,6 +37,11 @@ class MessageBoardApp extends HTMLElement {
   }
   
   connectedCallback() {
+    this.api.getComments().then(comments => this.setState({ comments }));
+    
+    // this.state = {
+    //   comments: this.api.getComments()
+    // }
     this.render();
   }
 
@@ -70,33 +76,33 @@ class MessageBoardApp extends HTMLElement {
     this.querySelector('message-board-comment-list').setAttribute('comments', JSON.stringify(this.state.comments));
   }
 
-  handleSearchSubmit = event => {
+  handleSearchSubmit = async event => {
     event.preventDefault();
     const searchText = new FormData(event.target).get('search');
-    const comments = this.api.filterCommentsByText(searchText);
+    const comments = await this.api.filterCommentsByText(searchText);
     this.setState({ comments });
   };
 
-  handleAddComment = event => {
+  handleAddComment = async event => {
     event.preventDefault();
     const commentText = new FormData(event.target).get('comment');
     event.target.reset();
-    const comments = this.api.addComment(commentText);
-    this.setState({ comments });
+    const responseBody = await this.api.addComment(commentText);
+    this.setState({ comments: responseBody.comments });
   };
 
-  handleRemoveComment = event => {
+  handleRemoveComment = async event => {
     const confirmed = window.confirm(`Really delete ${event.detail}?`);
     if (confirmed) {
-      const updatedComments = this.api.removeComment(event.target.comment.id);
-      this.setState({ comments: updatedComments });
+      const updatedComments = await this.api.removeComment(event.target.comment.id);
+      this.setState({ comments: updatedComments.comments });
     }
   };
 
-  handleEditComment = event => {
+  handleEditComment = async event => {
     const input = window.prompt(`Edit changes below`, `${event.detail}`);
     if (input) {
-      const updatedComments = this.api.updateComment(event.target.comment.id, input);
+      const updatedComments = await this.api.updateComment(event.target.comment.id, input);
       this.setState({ comments: updatedComments });
     }
   };
