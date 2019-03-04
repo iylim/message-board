@@ -5,6 +5,7 @@ function wait(ms) {
 class MessageBoardAPI {
   constructor(comments = []) {
     this.comments = comments;
+    this.url = 'https://express-codealong.herokuapp.com/api/comments/';
   }
   /**
    * Get all comments
@@ -12,8 +13,7 @@ class MessageBoardAPI {
    */
   getComments() {
     // return wait(1000).then(() => this.comments);
-    return fetch('https://express-codealong.herokuapp.com/api/comments')
-    .then(response => response.json());
+    return fetch(this.url).then(response => response.json());
   }
   
   /**
@@ -33,7 +33,7 @@ class MessageBoardAPI {
     const body = {
       text
     };
-    return fetch('https://express-codealong.herokuapp.com/api/comments', { 
+    return fetch(this.url, { 
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ class MessageBoardAPI {
     const body = { text };
     // this.comments.find(comment => comment.id === id).text = text;
     // return wait(1000).then(() => this.comments);
-    return fetch(`https://express-codealong.herokuapp.com/api/comments/${id}`, { 
+    return fetch(`${this.url}${id}`, { 
       method: 'PUT', 
       headers: {
         'Content-Type': 'application/json'
@@ -60,7 +60,6 @@ class MessageBoardAPI {
       body: JSON.stringify(body)
     }).then(response => response.json());
   }
-
 
   /**
    * Removes comment from the list
@@ -71,11 +70,8 @@ class MessageBoardAPI {
     // const index = this.comments.findIndex(comment => comment.id === id);
     // this.comments.splice(index, 1);
     // return wait(1000).then(() => this.comments);
-    return fetch(`https://express-codealong.herokuapp.com/api/comments/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    return fetch(`${this.url}${id}`, {
+      method: 'DELETE'
     }).then(response => response.json());
   }
 
@@ -101,8 +97,10 @@ class MessageBoardAPI {
    * @returns {Promise<array>} Filtered array of comment objects
    */
   filterCommentsByText(substring = '') {
-    return wait(1000).then(() => this.comments.filter(comment => comment.text.toLowerCase().includes(substring.toLowerCase())));
+    // return wait(1000).then(() => this.comments.filter(comment => comment.text.toLowerCase().includes(substring.toLowerCase())));
     // return this.comments.filter(comment => comment.text.toLowerCase().includes(substring.toLowerCase()));
+    return fetch(`${this.url}?filter=${substring}`)
+      .then(response => response.json());
   }
 }
 
